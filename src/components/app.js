@@ -10,6 +10,8 @@ class App extends React.Component {
     super();
     this.addFish = this.addFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
+    this.addToOrder = this.addToOrder.bind(this);
+
     //initial state
     this.state = {
       fishes: {},
@@ -18,7 +20,7 @@ class App extends React.Component {
   }
 
   addFish(fish){
-    const fishes = {...this.state.fishes}
+    const fishes = this.state.fishes
     const timestamp = Date.now();
     fishes[`fish-${timestamp}`] = fish;
     this.setState({fishes: fishes})
@@ -29,13 +31,20 @@ class App extends React.Component {
       fishes: sampleFishes
     })
   }
+
+  addToOrder(key){
+    const order = this.state.order;
+    order[key] = order[key] + 1 || 1; // Check for the key if none set it equal to one else increment
+    this.setState({order: order});
+  }
+
   render(){
     return (
       <div className="catch-of-the-day">
         <div className="menu">
           <Header tagline="Fresh Seafood Market"/>
           <ul className="list-of-fishes">
-            {Object.keys(this.state.fishes).map(key => <Fish key={key} details={this.state.fishes[key]}/>)}
+            {Object.keys(this.state.fishes).map(key => <Fish key={key} index={key} details={this.state.fishes[key]} addToOrder={this.addToOrder}/>)}
           </ul>
         </div>
         <Order />
